@@ -35,7 +35,7 @@ ENV TZ "Europe/Moscow"
 ENV XDG_DATA_HOME="/config"
 ENV XDG_CONFIG_HOME="/config" 
 
-RUN apk add --no-cache unzip unrar ca-certificates tzdata py3-cffi openssl p7zip && \
+RUN apk add --no-cache unzip ca-certificates tzdata py3-cffi openssl p7zip && \
     addgroup -g ${PGID} notroot && \
     adduser -D -H -G notroot -u ${PUID} notroot && \
     mkdir /config /downloads /watch /incomplete && \
