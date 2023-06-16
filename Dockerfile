@@ -26,7 +26,7 @@ RUN cd /opt && \
     ./configure && make && make install
 
 # ----------------------------------------------------------- #
-FROM python:alpine AS build-image
+FROM python:alpine
 MAINTAINER Paul Poloskov <pavel@poloskov.net>
 
 ENV PUID 1001
@@ -35,8 +35,7 @@ ENV TZ "Europe/Moscow"
 ENV XDG_DATA_HOME="/config"
 ENV XDG_CONFIG_HOME="/config" 
 
-RUN apk add --no-cache unzip unrar ca-certificates tzdata \
-    py3-cffi openssl unrar p7zip && \
+RUN apk add --no-cache unzip unrar ca-certificates tzdata py3-cffi openssl unrar p7zip && \
     addgroup -g ${PGID} notroot && \
     adduser -D -H -G notroot -u ${PUID} notroot && \
     mkdir /config /downloads /watch /incomplete && \
@@ -47,14 +46,6 @@ EXPOSE 8080
 HEALTHCHECK CMD netstat -an | grep 8080 > /dev/null; if [ 0 != $? ]; then exit 1 ; fi;
 
 VOLUME ["/config", "/downloads", "/watch", "/incomplete"]
-
-
-# Make sure we use the virtualenv:
-ENV PATH="/opt/venv/bin:$PATH"
-CMD ['myapp']
-
-#ENV VIRTUAL_ENV=/opt
-#ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=compile-image /opt/ /opt/
 COPY --from=compile-image \
