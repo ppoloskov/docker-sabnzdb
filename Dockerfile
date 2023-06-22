@@ -54,5 +54,5 @@ COPY --from=compile-image \
     /usr/local/bin/par2repair \
     /usr/local/bin/par2verify /usr/local/bin/
 
-ENTRYPOINT ["python /opt/SABnzbd/SABnzbd.py"]
-CMD ["-b0", "-s 0.0.0.0:8080", "-f /config/sabnzbd.ini"]
+ENTRYPOINT ["python", "/opt/SABnzbd/SABnzbd.py"]
+CMD ["-b0", "-s", "0.0.0.0:8080", "-f", "/config/sabnzbd.ini"]
