@@ -1,13 +1,13 @@
-FROM python:alpine AS compile-image
+FROM alpine:latest AS compile-image
 
-RUN python -m venv /opt/venv
+#RUN python -m venv /opt/venv
 # Make sure we use the virtualenv:
-ENV PATH="/opt/venv/bin:$PATH"
+#ENV PATH="/opt/venv/bin:$PATH"
 ENV VER="3.2.1"
 
 RUN apk add --no-cache --virtual \
     .build-deps gcc g++ automake autoconf make musl-dev git \
-    libffi-dev rust cargo openssl-dev jq curl
+    libffi-dev rust cargo openssl-dev jq curl python3 py3-pip
 
 # Download latest release of Sabnzd
 RUN mkdir -p /opt/SABnzbd && \
@@ -17,7 +17,7 @@ RUN mkdir -p /opt/SABnzbd && \
     tar xvfz /tmp/SABnzbd.tgz -C /opt/SABnzbd --strip-components=1
 
 RUN cd /opt/SABnzbd/ && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt -t .
 
 RUN cd /opt && \
     git clone https://github.com/Parchive/par2cmdline.git && \
@@ -26,7 +26,7 @@ RUN cd /opt && \
     ./configure && make && make install
 
 # ----------------------------------------------------------- #
-FROM python:alpine
+FROM alpine:latest
 MAINTAINER Paul Poloskov <pavel@poloskov.net>
 
 ENV PUID 1001
